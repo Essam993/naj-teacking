@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import SideMenu from '../../SideMenu';
 import { GlobalOutlined, InboxOutlined, LayoutOutlined, MessageOutlined } from '@ant-design/icons';
-import { Layout as AntdLayout, theme, Menu, Button, Flex } from 'antd';
+import { Layout as AntdLayout, theme, Menu, Button, Flex, Drawer } from 'antd';
 import { Link } from 'react-router-dom';
 import { CustomToggleBtn } from '../../SideMenu/sideMenu.styles';
+import ChatModule from '../../ChatModule';
 
 const { Header, Content } = AntdLayout;
 
@@ -13,9 +14,14 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     } = theme.useToken();
     const [collapsed, setCollapsed] = useState(false);
     const [userMenuVisible, setUserMenuVisible] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false); // State for chat module
 
     const toggleUserMenu = () => {
         setUserMenuVisible(!userMenuVisible);
+    };
+
+    const toggleChatModule = () => {
+        setIsChatOpen(!isChatOpen);
     };
 
     const userMenu = (
@@ -54,7 +60,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     </div>
                     <Flex gap={10} justify="flex-end" align="center" style={{ position: 'relative' }}>
                         <Button><GlobalOutlined /></Button>
-                        <Button><InboxOutlined /></Button>
+                        <Button onClick={toggleChatModule}><InboxOutlined /></Button> {/* Toggle Chat */}
                         <Button><MessageOutlined /></Button>
                         <Button style={{ border: 'none' }} onClick={toggleUserMenu}>
                             <span style={{ display: 'flex', alignItems: 'center' }}>
@@ -80,6 +86,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                     {children}
                 </Content>
             </AntdLayout>
+            {/* Chat Module */}
+            <Drawer
+                title="Chat"
+                placement="right"
+                onClose={() => setIsChatOpen(false)}
+                open={isChatOpen}
+            >
+                <ChatModule />
+            </Drawer>
         </AntdLayout>
     );
 };
